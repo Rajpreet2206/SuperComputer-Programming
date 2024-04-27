@@ -1,6 +1,6 @@
 # Intel compiler
 CC =  icc
-CFLAGS = -O3 -fno-alias -xhost
+CFLAGS = -O2
 MPICC = mpicc
 
 all: heat

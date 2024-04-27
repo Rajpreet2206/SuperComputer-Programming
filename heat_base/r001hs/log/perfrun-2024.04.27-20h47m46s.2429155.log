@@ -1,0 +1,35 @@
+11 [4130367232] INFO perfrun.launcher <> - Launcher main begin
+13 [4130367232] INFO perfrun.launcher <> - MessageCatalogInit finished
+13 [4130367232] INFO perfrun.launcher <> - Launcher instance created
+13 [4130367232] INFO perfrun.launcher <> - argc = 6; cmdline = /dss/lrzsys/sys/spack/release/22.2.1/opt/x86_64/intel-oneapi-vtune/2021.7.1-gcc-ihh6yuf/vtune/2021.7.1/bin32/amplxe-runss -dump-vdso -r /dss/dsshome1/06/h039vab/source_code/efficient-multicore-programming-group5/heat_base/r001hs --tmp-dir /hppfs/scratch/06/h039vab/tmp/amplxe-tmp-h039vab 
+30 [4130367232] INFO perfrun.launcher <> - create msngr2::ICliToolContext
+31 [4130367232] INFO perfrun.launcher <> - create file finder object
+39 [4121299776] INFO perfrun.launcher <> - plugin [remoteplug] was disabled because it doesn't support the given collection type.
+39 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+39 [4121299776] INFO perfrun.vdso <> - dumping [vdso] pseudomodule
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4121299776] INFO perfrun.launcher <> - plugin [] was disabled because it doesn't support the given collection type.
+293 [4130367232] INFO perfrun.launcher <> - Application exit code: 0
+294 [4130367232] INFO perfrun.launcher <> - Exit code: 0
