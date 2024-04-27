@@ -1,0 +1,200 @@
+//
+// ------- Annotated listing with optimization reports for "/dss/dsshome1/06/h039vab/source_code/efficient-multicore-programming-group5/heat_base/heat.c" -------
+//
+//Intel(R) C Intel(R) 64 Compiler Classic for applications running on Intel(R) 64, Version 2021.4.0 Build 20210910_000000
+//
+//Compiler options: -Ofast -xCORE-AVX512 -qopt-report=5 -qopt-report-annotate -qopt-report-phase=vec,loop -c -o heat.o
+1	/*
+2	 * heat.h
+3	 *
+4	 * Iterative solver for heat distribution
+5	 */
+6	
+7	#include "heat.h"
+8	
+9	#include <stdio.h>
+10	#include <stdlib.h>
+11	#include <unistd.h>
+12	#include "input.h"
+13	#include "timing.h"
+14	
+15	void usage(char *s) {
+16		fprintf(stderr, "Usage: %s <input file> [result file]\n\n", s);
+17	}
+18	
+19	int main(int argc, char *argv[]) {
+20		unsigned iter;
+21		FILE *infile, *resfile, *logfile;
+22		char *resfilename, *logfileName;
+23	
+24		logfileName="output_Ofast_AVX512_opt_report.log";
+25		logfile = fopen(logfileName, "w");
+26		if(!logfile){
+27			fprintf(stderr, "Error: Cannot Open log file \"%s\" for writing. \n", logfileName);
+28			return -1;
+29		}
+30	
+31		if(dup2(fileno(logfile), STDOUT_FILENO)== -1){
+32			fprintf(stderr, "Error: Cannot redirect stdout to log file.\n");
+33			fclose(logfile);
+34			return -1;		
+35		}
+36	
+37	
+38		// algorithmic parameters
+39		algoparam_t param;
+40		int np,i;
+41	
+42		double runtime, flop;
+43		double residual;
+44		double time[1000];
+45		double floprate[1000];
+46		int resolution[1000];
+47		int experiment=0;
+48	
+49		// check arguments
+50		if (argc < 2) {
+51			usage(argv[0]);
+52			return 1;
+53		}
+54	
+55		// check input file
+56		if (!(infile = fopen(argv[1], "r"))) {
+57			fprintf(stderr, "\nError: Cannot open \"%s\" for reading.\n\n", argv[1]);
+58	
+59			usage(argv[0]);
+60			return 1;
+61		}
+62	
+63		// check result file
+64		resfilename = (argc >= 3) ? argv[2] : "heat.ppm";
+65	
+66		if (!(resfile = fopen(resfilename, "w"))) {
+67			fprintf(stderr, "\nError: Cannot open \"%s\" for writing.\n\n", resfilename);
+68	
+69			usage(argv[0]);
+70			return 1;
+71		}
+72	
+73		// check input
+74		if (!read_input(infile, &param)) {
+75			fprintf(stderr, "\nError: Error parsing input file.\n\n");
+76	
+77			usage(argv[0]);
+78			return 1;
+79		}
+80	
+81		print_params(&param);
+82	
+83		// set the visualization resolution
+84		param.visres = 1024;
+85	
+86		param.u = 0;
+87		param.uhelp = 0;
+88		param.uvis = 0;
+89	
+90		param.act_res = param.initial_res;
+91	
+92		// loop over different resolutions
+93		while (1) {
+94	
+95			// free allocated memory of previous experiment
+96			if (param.u != 0)
+//
+//LOOP BEGIN at /dss/dsshome1/06/h039vab/source_code/efficient-multicore-programming-group5/heat_base/heat.c(96,7)
+//   remark #15522: loop was not vectorized: loop control flow is too complex. Try using canonical loop form from OpenMP specification
+//
+//   LOOP BEGIN at /dss/dsshome1/06/h039vab/source_code/efficient-multicore-programming-group5/heat_base/heat.c(114,3)
+//      remark #15522: loop was not vectorized: loop control flow is too complex. Try using canonical loop form from OpenMP specification
+//   LOOP END
+//LOOP END
+97				finalize(&param);
+98	
+99			if (!initialize(&param)) {
+100				fprintf(stderr, "Error in Jacobi initialization.\n\n");
+101	
+102				usage(argv[0]);
+103			}
+104	
+105			fprintf(stderr, "Resolution: %5u\r", param.act_res);
+106	
+107			// full size (param.act_res are only the inner points)
+108			np = param.act_res + 2;
+109	
+110			// starting time
+111			runtime = wtime();
+112			residual = 999999999;
+113	
+114			iter = 0;
+115			while (1) {
+116	
+117				switch (param.algorithm) {
+118	
+119				case 0: // JACOBI
+120	
+121					relax_jacobi(param.u, param.uhelp, np, np);
+122					residual = residual_jacobi(param.u, np, np);
+123					break;
+124	
+125				case 1: // GAUSS
+126	
+127					relax_gauss(param.u, np, np);
+128					residual = residual_gauss(param.u, param.uhelp, np, np);
+129					break;
+130				}
+131	
+132				iter++;
+133	
+134				// solution good enough ?
+135				if (residual < 0.000005)
+136					break;
+137	
+138				// max. iteration reached ? (no limit with maxiter=0)
+139				if (param.maxiter > 0 && iter >= param.maxiter)
+140					break;
+141	
+142				// if (iter % 100 == 0)
+143				// 	fprintf(stderr, "residual %f, %d iterations\n", residual, iter);
+144			}
+145	
+146			// Flop count after <i> iterations
+147			flop = iter * 11.0 * param.act_res * param.act_res;
+148			// stopping time
+149			runtime = wtime() - runtime;
+150	
+151			fprintf(stderr, "Resolution: %5u, ", param.act_res);
+152			fprintf(stderr, "Time: %04.3f ", runtime);
+153			fprintf(stderr, "(%3.3f GFlop => %6.2f MFlop/s, ", flop / 1000000000.0, flop / runtime / 1000000);
+154			fprintf(stderr, "residual %f, %d iterations)\n", residual, iter);
+155	
+156			// for plot...
+157			time[experiment]=runtime;
+158			floprate[experiment]=flop / runtime / 1000000;
+159			resolution[experiment]=param.act_res;
+160			experiment++;
+161	
+162			if (param.act_res + param.res_step_size > param.max_res)
+163				break;
+164			param.act_res += param.res_step_size;
+165			
+166		}
+167		#pragma ivdep
+168		for (i=0;i<experiment; i++){
+//
+//LOOP BEGIN at /dss/dsshome1/06/h039vab/source_code/efficient-multicore-programming-group5/heat_base/heat.c(168,2)
+//   remark #15382: vectorization support: call to function printf(const char *__restrict__, ...) cannot be vectorized   [ /dss/dsshome1/06/h039vab/source_code/efficient-multicore-programming-group5/heat_base/heat.c(169,3) ]
+//   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+//   remark #25015: Estimate of max trip count of loop=1000
+//LOOP END
+169			printf("%5d; %5.3f; %5.3f\n", resolution[i], time[i], floprate[i]);
+170	
+171		}
+172	
+173		coarsen(param.u, np, np, param.uvis, param.visres + 2, param.visres + 2);
+174	
+175		write_image(resfile, param.uvis, param.visres + 2, param.visres + 2);
+176	
+177		finalize(&param);
+178		fclose(logfile);
+179		return 0;
+180	}

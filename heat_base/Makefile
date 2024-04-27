@@ -1,7 +1,6 @@
 # Intel compiler
 CC =  icc
-CFLAGS = -O3 -xhost
-
+CFLAGS = -Ofast -xCORE-AVX512 -qopt-report=5 -qopt-report-annotate -qopt-report-phase=vec,loop
 MPICC = mpicc
 
 all: heat

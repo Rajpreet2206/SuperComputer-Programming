@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 	FILE *infile, *resfile, *logfile;
 	char *resfilename, *logfileName;
 
-	logfileName="output_O3_xhost_flag.log";
+	logfileName="output_Ofast_AVX512_opt_report.log";
 	logfile = fopen(logfileName, "w");
 	if(!logfile){
 		fprintf(stderr, "Error: Cannot Open log file \"%s\" for writing. \n", logfileName);
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
 		param.act_res += param.res_step_size;
 		
 	}
-
+	#pragma ivdep
 	for (i=0;i<experiment; i++){
 		printf("%5d; %5.3f; %5.3f\n", resolution[i], time[i], floprate[i]);
 

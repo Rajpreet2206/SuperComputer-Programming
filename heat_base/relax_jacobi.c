@@ -14,8 +14,9 @@
 double residual_jacobi(double *u, unsigned sizex, unsigned sizey) {
 	unsigned i, j;
 	double unew, diff, sum = 0.0;
-
+	#pragma ivdep
 	for (j = 1; j < sizex - 1; j++) {
+		#pragma ivdep
 		for (i = 1; i < sizey - 1; i++) {
 			unew = 0.25 * (u[i * sizex + (j - 1)] +  // left
 						u[i * sizex + (j + 1)] +  // right
@@ -35,8 +36,9 @@ double residual_jacobi(double *u, unsigned sizex, unsigned sizey) {
  */
 void relax_jacobi(double *u, double *utmp, unsigned sizex, unsigned sizey) {
 	int i, j;
-
+	#pragma ivdep
 	for (j = 1; j < sizex - 1; j++) {
+		#pragma ivdep
 		for (i = 1; i < sizey - 1; i++) {
 			utmp[i * sizex + j] = 0.25 * (u[i * sizex + (j - 1)] +  // left
 						u[i * sizex + (j + 1)] +  // right
