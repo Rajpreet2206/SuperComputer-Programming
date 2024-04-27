@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <unistd.h>
 #include "input.h"
 #include "timing.h"
 
@@ -18,8 +18,22 @@ void usage(char *s) {
 
 int main(int argc, char *argv[]) {
 	unsigned iter;
-	FILE *infile, *resfile;
-	char *resfilename;
+	FILE *infile, *resfile, *logfile;
+	char *resfilename, *logfileName;
+
+	logfileName="output_initial_performance.log";
+	logfile = fopen(logfileName, "w");
+	if(!logfile){
+		fprintf(stderr, "Error: Cannot Open log file \"%s\" for writing. \n", logfileName);
+		return -1;
+	}
+
+	if(dup2(fileno(logfile), STDOUT_FILENO)== -1){
+		fprintf(stderr, "Error: Cannot redirect stdout to log file.\n");
+		fclose(logfile);
+		return -1;		
+	}
+
 
 	// algorithmic parameters
 	algoparam_t param;
@@ -161,6 +175,6 @@ int main(int argc, char *argv[]) {
 	write_image(resfile, param.uvis, param.visres + 2, param.visres + 2);
 
 	finalize(&param);
-
+	fclose(logfile);
 	return 0;
 }
