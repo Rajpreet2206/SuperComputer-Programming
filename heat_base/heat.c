@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 	FILE *infile, *resfile, *logfile;
 	char *resfilename, *logfileName;
 
-	logfileName="output_initial_performance.log";
+	logfileName="output_O3_xhost_flag.log";
 	logfile = fopen(logfileName, "w");
 	if(!logfile){
 		fprintf(stderr, "Error: Cannot Open log file \"%s\" for writing. \n", logfileName);
