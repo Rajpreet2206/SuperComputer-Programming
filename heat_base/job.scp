@@ -1,4 +1,5 @@
 #!/bin/bash
+#module load intel-oneapi-vtune
 
 # Job Name and Files
 #SBATCH -J heat
@@ -10,5 +11,10 @@
 #SBATCH --account=h039v
 #SBATCH --partition=test
 
-./heat test.dat
+# Collection
+aps --result-dir= / ./heat test.dat
 
+# Report
+aps-report /
+
+aps-report -a /
